@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option go_package = "github.com/vusalalishov/manpass/api";
+
+package api;
+
+message Credential {
+    string login = 1;
+    string password = 2;
+}
+
+message Credentials {
+    repeated Credential credentials = 1;
+}
+
+message Empty {
+}
+
+service CredentialStore {
+    rpc GetAll(Empty) returns (Credentials);
+    rpc Save(Credential) returns (Empty);
+}
