@@ -3,9 +3,10 @@
 package config
 
 import (
+	"sync"
+
 	"github.com/google/wire"
 	"github.com/spf13/viper"
-	"sync"
 )
 
 type Config interface {
@@ -19,12 +20,13 @@ type viperConfig struct {
 func (c *viperConfig) Get(key string) string {
 	panic("Not implemented!")
 }
+
 var (
 	once sync.Once
 )
 var v *viper.Viper
 
-func provideConfig() Config {
+func ProvideConfig() Config {
 	once.Do(func() {
 		v = viper.New()
 	})
@@ -32,5 +34,5 @@ func provideConfig() Config {
 }
 
 func InjectConfig() Config {
-	panic(wire.Build(provideConfig))
+	panic(wire.Build(ProvideConfig))
 }

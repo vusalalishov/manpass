@@ -16,7 +16,7 @@ var (
 	db *sql.DB
 )
 // TODO: cleanup function is missing
-func provideDb(cfg config.Config) (*sql.DB, error) {
+func ProvideDb(cfg config.Config) (*sql.DB, error) {
 	var err error
 	var dbFile = cfg.Get(config.DB_FILE)
 	once.Do(func() {
@@ -29,5 +29,5 @@ func provideDb(cfg config.Config) (*sql.DB, error) {
 }
 
 func InjectDb()	(*sql.DB, error) {
-	panic(wire.Build(config.ProvideConfig, provideDb))
+	panic(wire.Build(config.ProvideConfig, ProvideDb))
 }
