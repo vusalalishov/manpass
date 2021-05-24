@@ -5,9 +5,9 @@ option go_package = "github.com/vusalalishov/manpass/api";
 package api;
 
 message Credential {
-    string title = 0;
-    string login = 1;
-    string password = 2;
+    string title = 1;
+    string login = 2;
+    string password = 3;
 }
 
 message Credentials {
@@ -17,7 +17,10 @@ message Credentials {
 message Empty {
 }
 
+message CredentialId {
+    int64 id = 1;
+}
+
 service CredentialStore {
-    rpc GetAll(Empty) returns (Credentials);
-    rpc Save(Credential) returns (Empty);
+    rpc Save(Credential) returns (CredentialId);
 }

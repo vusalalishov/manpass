@@ -20,3 +20,6 @@
 
 # editor
 .idea
+
+main
+.DS_Store
