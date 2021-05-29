@@ -12,6 +12,7 @@ type CredentialRepository interface {
 	Save(*model.Credential) (int64, error)
 	Update(int64, *model.Credential) error
 	Get(int64) (*model.Credential, error)
+	GetAll() (*[]*model.Credential, error)
 }
 
 type credentialRepository struct {
@@ -84,4 +85,36 @@ func (r *credentialRepository) Get(id int64) (*model.Credential, error) {
 		Password: password,
 		UpdatedAt: updatedAt,
 	}, nil
+}
+
+func (r *credentialRepository) GetAll() (*[]*model.Credential, error) {
+	stmt, err := r.db.Prepare("select * from credential")
+	if err != nil {
+		return nil, err
+	}
+	rows, err := stmt.Query()
+	if err != nil {
+		return nil, err
+	}
+	var credentials = make([]*model.Credential, 0)
+	for rows.Next() {
+		var (
+			id int64
+			title string
+			login string
+			password string
+			updatedAt time.Time
+		)
+		if err := rows.Scan(&id, &title, &login, &password, &updatedAt); err != nil {
+			credentials = append(credentials, &model.Credential{
+				Id: id,
+				Title: title,
+				Login: login,
+				Password: password,
+				UpdatedAt: updatedAt,
+			})
+		}
+	}
+
+	return &credentials, nil
 }

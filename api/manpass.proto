@@ -23,4 +23,5 @@ message CredentialId {
 
 service CredentialStore {
     rpc Save(Credential) returns (CredentialId);
+    rpc GetAll(Empty) returns (Credentials);
 }

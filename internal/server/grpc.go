@@ -21,6 +21,14 @@ func (s *grpcServer) Save(c context.Context, cred *api.Credential) (*api.Credent
 	return id, nil
 }
 
+func (s *grpcServer) GetAll(c context.Context, empty *api.Empty) (*api.Credentials, error) {
+	creds, err := s.credSvc.GetAll()
+	if err != nil {
+		return nil, err
+	}
+	return creds, nil
+}
+
 func ProvideGrpcServer(cs service.CredentialService) *grpc.Server {
 	var (
 		srv *grpc.Server
