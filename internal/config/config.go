@@ -1,16 +1,12 @@
-// +build wireinject
-
 package config
 
 import (
-	"sync"
-
-	"github.com/google/wire"
 	"github.com/spf13/viper"
+	"sync"
 )
 
 type Config interface {
-	Get(key string) string
+	Get(string) string
 }
 
 type viperConfig struct {
@@ -18,21 +14,22 @@ type viperConfig struct {
 }
 
 func (c *viperConfig) Get(key string) string {
-	panic("Not implemented!")
+	return c.v.GetString(key)
 }
 
 var (
 	once sync.Once
+	v *viper.Viper
 )
-var v *viper.Viper
 
 func ProvideConfig() Config {
 	once.Do(func() {
 		v = viper.New()
+		v.AutomaticEnv()
 	})
 	return &viperConfig{v: v}
 }
 
 func InjectConfig() Config {
-	panic(wire.Build(ProvideConfig))
+	return ProvideConfig()
 }

@@ -1,11 +1,8 @@
-// +build wireinject
-
 package db
 
 import (
 	"database/sql"
 	"fmt"
-	"github.com/google/wire"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/vusalalishov/manpass/internal/config"
 	"sync"
@@ -15,7 +12,7 @@ var (
 	once sync.Once
 	db *sql.DB
 )
-// TODO: cleanup function is missing
+
 func ProvideDb(cfg config.Config) (*sql.DB, error) {
 	var err error
 	var dbFile = cfg.Get(config.DB_FILE)
@@ -29,5 +26,6 @@ func ProvideDb(cfg config.Config) (*sql.DB, error) {
 }
 
 func InjectDb()	(*sql.DB, error) {
-	panic(wire.Build(config.ProvideConfig, ProvideDb))
+	cfg := config.InjectConfig()
+	return ProvideDb(cfg)
 }

@@ -1,11 +1,7 @@
-// +build wireinject
-
 package repository
 
 import (
 	"database/sql"
-	"github.com/google/wire"
-	"github.com/vusalalishov/manpass/internal/config"
 	"github.com/vusalalishov/manpass/internal/db"
 	"time"
 
@@ -13,31 +9,35 @@ import (
 )
 
 type CredentialRepository interface {
-	Save(cred *model.Credential) (int64, error)
-	Update(id int64, cred *model.Credential) error
-	Get(id int64) (*model.Credential, error)
+	Save(*model.Credential) (int64, error)
+	Update(int64, *model.Credential) error
+	Get(int64) (*model.Credential, error)
 }
 
 type credentialRepository struct {
 	db *sql.DB
 }
 
-func ProvideCredentialRepository(db *sql.DB) (CredentialRepository) {
+func ProvideCredentialRepository(db *sql.DB) CredentialRepository {
 	return &credentialRepository{
 		db,
 	}
 }
 
 func InjectCredRepository() (CredentialRepository, error) {
-	panic(wire.Build(config.ProvideConfig, db.ProvideDb, ProvideCredentialRepository))
+	dbInjected, err := db.InjectDb()
+	if err != nil {
+		return nil, err
+	}
+	return ProvideCredentialRepository(dbInjected), nil
 }
 
 func (r *credentialRepository) Save(cred *model.Credential) (int64, error) {
-	stmt, err := r.db.Prepare("insert into credential (id, title, login, password, updated_at) values (?, ?, ?, ?, ?)")
+	stmt, err := r.db.Prepare("insert into credential (title, login, password, updated_at) values (?, ?, ?, ?)")
 	if err != nil {
 		return 0, err
 	}
-	res, err := stmt.Exec(cred.Id, cred.Title, cred.Login, cred.Password, cred.UpdatedAt)
+	res, err := stmt.Exec(cred.Title, cred.Login, cred.Password, cred.UpdatedAt)
 	if err != nil {
 		return 0, err
 	}

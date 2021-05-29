@@ -1,10 +1,7 @@
-// +build wireinject
-
 package server
 
 import (
 	"context"
-	"github.com/google/wire"
 	"github.com/vusalalishov/manpass/api"
 	"github.com/vusalalishov/manpass/internal/service"
 	"google.golang.org/grpc"
@@ -39,6 +36,10 @@ func ProvideGrpcServer(cs service.CredentialService) *grpc.Server {
 	return srv
 }
 
-func InjectGrpcServer() *grpc.Server {
-	panic(wire.Build(service.ProvideCredService, ProvideGrpcServer))
+func InjectGrpcServer() (*grpc.Server, error) {
+	srv, err := service.InjectCredService()
+	if err != nil {
+		return nil, err
+	}
+	return ProvideGrpcServer(srv), nil
 }
