@@ -10,8 +10,13 @@ message Credential {
     string password = 3;
 }
 
-message Credentials {
-    repeated Credential credentials = 1;
+message CredentialResponseItem {
+    int64 id = 1;
+    Credential credential = 2;
+}
+
+message CredentialsResponse {
+    repeated CredentialResponseItem credentials = 1;
 }
 
 message Empty {
@@ -23,5 +28,5 @@ message CredentialId {
 
 service CredentialStore {
     rpc Save(Credential) returns (CredentialId);
-    rpc GetAll(Empty) returns (Credentials);
+    rpc GetAll(Empty) returns (CredentialsResponse);
 }

@@ -22,7 +22,7 @@ func (m *migratorImpl) Migrate() error {
 	if err != nil {
 		return err
 	}
-	migration, err := migrate.NewWithDatabaseInstance(m.config.Get(config.MIGRATIONS_PATH), m.config.Get(config.DB_FILE), driver)
+	migration, err := migrate.NewWithDatabaseInstance(m.config.Get(config.MigrationsPath), m.config.Get(config.DbFile), driver)
 	if err != nil {
 		return err
 	}

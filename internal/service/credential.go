@@ -9,7 +9,7 @@ import (
 
 type CredentialService interface {
 	Save(*api.Credential) (*api.CredentialId, error)
-	GetAll() (*api.Credentials, error)
+	GetAll() (*api.CredentialsResponse, error)
 }
 
 type credentialService struct {
@@ -30,20 +30,23 @@ func (cs *credentialService) Save(cred *api.Credential) (*api.CredentialId, erro
 	return &api.CredentialId{Id: id}, nil
 }
 
-func (cs *credentialService) GetAll() (*api.Credentials, error) {
+func (cs *credentialService) GetAll() (*api.CredentialsResponse, error) {
 	var all, err = cs.credRepository.GetAll()
 	if err != nil {
 		return nil, err
 	}
-	var creds = make([]*api.Credential, 0)
+	var creds = make([]*api.CredentialResponseItem, 0)
 	for _, v := range *all {
-		creds = append(creds, &api.Credential{
-			Title: v.Title,
-			Login: v.Login,
-			Password: v.Password,
+		creds = append(creds, &api.CredentialResponseItem{
+			Id: v.Id,
+			Credential: &api.Credential{
+				Title: v.Title,
+				Login: v.Login,
+				Password: v.Password,
+			},
 		})
 	}
-	return &api.Credentials{Credentials: creds}, nil
+	return &api.CredentialsResponse{Credentials: creds}, nil
 }
 
 func ProvideCredService(credentialRepository repository.CredentialRepository) CredentialService {
