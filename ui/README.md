@@ -1,4 +1,4 @@
-# manpass-ui
+# ui
 
 ## Project setup
 ```
