@@ -3,15 +3,18 @@
     <TopPanel />
   </div>
   <SearchBox />
+  <CredentialList />
 </template>
 
 <script>
 import SearchBox from "./components/SearchBox";
 import TopPanel from "./components/TopPanel"
+import CredentialList from "./components/CredentialList";
 
 export default {
   name: "App",
   components: {
+    CredentialList,
     SearchBox,
     TopPanel
   },
